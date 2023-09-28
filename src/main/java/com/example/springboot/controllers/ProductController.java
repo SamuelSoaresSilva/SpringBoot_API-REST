@@ -22,6 +22,10 @@ import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.methodOn;
 //Rest Controller é uma derivada da @Controller, mas direcionada a uma api Restful
 public class ProductController {
 
+
+    //Endereço da pasta de imagens
+    private static String caminhoImagens = "C:\\Users\\samip\\ProjetosSpringBoot\\ImagensSpringBoot_API-REST";
+
     @Autowired
     ProductRepository productRepository;
     //Logo após, criei um DTO Data Transfer Object

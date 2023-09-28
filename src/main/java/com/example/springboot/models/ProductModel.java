@@ -20,18 +20,25 @@ public class ProductModel extends RepresentationModel<ProductModel> implements S
     @GeneratedValue(strategy = GenerationType.AUTO)
 
     private UUID idProduct;
-    //private String image;
+
+    //Em uma aplicação mais especifica, o certo seria declarar uma entidade separada indicando o endereço
+    //de cada uma das imagens de um deivido produto
+    private String image;
     private String name;
     private BigDecimal value;
+    private String description;
+    private String brand;
+    private Integer quantity;
+    private String category;
 
 
     public UUID getIdProduct() {
         return idProduct;
     }
 
-    //public String getImage() { return image; }
+    public String getImage() { return image; }
 
-    //public void setImage(String image) { this.image = image; }
+    public void setImage(String image) { this.image = image; }
 
     public String getName() {
         return name;
@@ -48,4 +55,20 @@ public class ProductModel extends RepresentationModel<ProductModel> implements S
     public void setValue(BigDecimal value) {
         this.value = value;
     }
+
+    public String getDescription() { return description; }
+
+    public void setDescription(String description) { this.description = description; }
+
+    public String getBrand() { return brand; }
+
+    public void setBrand(String brand) { this.brand = brand; }
+
+    public Integer getQuantity() { return quantity; }
+
+    public void setQuantity(Integer quantity) { this.quantity = quantity; }
+
+    public String getCategory(){ return category; }
+
+    public void setCategory(String category) { this.category = category; }
 }
