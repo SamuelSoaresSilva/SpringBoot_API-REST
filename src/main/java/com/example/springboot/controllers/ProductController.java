@@ -47,7 +47,6 @@ public class ProductController {
                 product.add(linkTo(methodOn(ProductController.class).getOneProduct(id)).withSelfRel());
             }
         }
-
         return ResponseEntity.status(HttpStatus.OK).body(productsList);
     }
 
@@ -73,7 +72,7 @@ public class ProductController {
         return ResponseEntity.status(HttpStatus.OK).body(productRepository.save(productModel));
     }
 
-    @DeleteMapping("products/{id}")
+    @DeleteMapping("/products/{id}")
     public ResponseEntity<Object> deleteProduct(@PathVariable(value = "id") UUID id){
         Optional<ProductModel> productO = productRepository.findById(id);
         if (productO.isEmpty()){
@@ -81,5 +80,16 @@ public class ProductController {
         }
         productRepository.delete(productO.get());
         return ResponseEntity.status(HttpStatus.OK).body("Product has been deleted");
+    }
+
+    @DeleteMapping("/products")
+    public ResponseEntity<Object> deleteAllProducts(){
+        List<ProductModel> productsList = productRepository.findAll();
+        if (productsList.isEmpty()){
+            return ResponseEntity.status(HttpStatus.NOT_IMPLEMENTED).body("Product list is already empty");
+        }else {
+            productRepository.deleteAll();
+            return ResponseEntity.status(HttpStatus.OK).body("All products has been deleted");
+        }
     }
 }
