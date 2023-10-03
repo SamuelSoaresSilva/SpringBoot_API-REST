@@ -24,13 +24,13 @@ public class ProductController {
 
 
     //Endereço da pasta de imagens
-    private static String caminhoImagens = "C:\\Users\\samip\\ProjetosSpringBoot\\ImagensSpringBoot_API-REST";
+    //private static String caminhoImagens = "Endereço";
 
     @Autowired
     ProductRepository productRepository;
     //Logo após, criei um DTO Data Transfer Object
 
-    @PostMapping("/products")
+    @PostMapping({"/products", "/products/"})
     public ResponseEntity<ProductModel> saveProduct(@RequestBody @Valid ProductRecordDto productRecordDto){
         var productModel = new ProductModel();
         BeanUtils.copyProperties(productRecordDto, productModel);
@@ -38,16 +38,19 @@ public class ProductController {
         //Metodo Post pronto porem sem customização de mensagem de erro ou de exceptions
     }
 
-    @GetMapping("/products")
+    @GetMapping({"/products", "/products/"})
     public ResponseEntity<List<ProductModel>> getAllProducts(){
         List<ProductModel> productsList = productRepository.findAll();
         if (!productsList.isEmpty()){
-            for (ProductModel product: productsList) {
+            //JAVA Streams map function
+            productsList.forEach(product -> {
                 UUID id = product.getIdProduct();
                 product.add(linkTo(methodOn(ProductController.class).getOneProduct(id)).withSelfRel());
-            }
+            });
+            return ResponseEntity.status(HttpStatus.OK).body(productsList);
+        }else {
+            return ResponseEntity.status(HttpStatus.NO_CONTENT).body(productsList);
         }
-        return ResponseEntity.status(HttpStatus.OK).body(productsList);
     }
 
     @GetMapping("/products/{id}")
@@ -82,7 +85,7 @@ public class ProductController {
         return ResponseEntity.status(HttpStatus.OK).body("Product has been deleted");
     }
 
-    @DeleteMapping("/products")
+    @DeleteMapping({"/products", "/products/"})
     public ResponseEntity<Object> deleteAllProducts(){
         List<ProductModel> productsList = productRepository.findAll();
         if (productsList.isEmpty()){
