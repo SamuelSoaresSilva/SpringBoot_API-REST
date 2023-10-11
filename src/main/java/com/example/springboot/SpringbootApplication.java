@@ -6,7 +6,7 @@ import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 
 @SpringBootApplication
-@OpenAPIDefinition(info = @Info(title = "API noNick", version = "1", description = "API de uma loja de roupa de grife"))
+@OpenAPIDefinition(info = @Info(title = "API REST - NoNick", version = "1", description = "API de controle de estoque para uma loja virtual"))
 public class SpringbootApplication {
 
 	public static void main(String[] args) {

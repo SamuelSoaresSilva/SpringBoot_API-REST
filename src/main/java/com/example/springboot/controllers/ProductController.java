@@ -30,13 +30,11 @@ public class ProductController {
      URL Local: http://localhost:8080/swagger-ui/index.html#/
      */
 
-
     @Autowired
     ProductRepository productRepository;
-    //Logo após, criei um DTO Data Transfer Object
 
-    @Operation(summary = "Add um produto no banco")
-    @PostMapping
+    @Operation(summary = "Posts a product to the database and then returns it")
+    @PostMapping({"","/"})
     public ResponseEntity<ProductModel> saveProduct(@RequestBody @Valid ProductRecordDto productRecordDto){
         var productModel = new ProductModel();
         BeanUtils.copyProperties(productRecordDto, productModel);
@@ -44,9 +42,9 @@ public class ProductController {
         //Metodo Post pronto porem sem customização de mensagem de erro ou de exceptions
     }
 
-    @Operation(summary = "Busca todos os produtos presente no banco")
-    @GetMapping()
-    public ResponseEntity<List<ProductModel>> getAllProducts(){
+    @Operation(summary = "Calls all products in the bank and returns the list of products with their respective individual URLs")
+    @GetMapping({"","/"})
+    public ResponseEntity getAllProducts(){
         List<ProductModel> productsList = productRepository.findAll();
         if (!productsList.isEmpty()){
             //JAVA Streams map function
@@ -56,22 +54,22 @@ public class ProductController {
             });
             return ResponseEntity.status(HttpStatus.OK).body(productsList);
         }else {
-            return ResponseEntity.status(HttpStatus.NO_CONTENT).body(productsList);
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body("There is no products yet");
         }
     }
 
-    @Operation(summary = "Busca um produto no banco pelo ID")
+    @Operation(summary = "Calls a product referenced by its ID and returns the product and the URL where all products are located")
     @GetMapping("/{id}")
-    public ResponseEntity<Object> getOneProduct(@PathVariable(value = "id") UUID id){
-        Optional<ProductModel> productO = productRepository.findById(id);
-        if (productO.isEmpty()){
-            return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Product not found");
-        }
-        productO.get().add(linkTo(methodOn(ProductController.class).getAllProducts()).withRel("Product List"));
-        return ResponseEntity.status(HttpStatus.OK).body(productO.get());
+    public ResponseEntity<Object> getOneProduct(@PathVariable(value = "id") UUID id) {
+            Optional<ProductModel> productO = productRepository.findById(id);
+            if (productO.isEmpty()) {
+                return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Product not found");
+            }
+            productO.get().add(linkTo(methodOn(ProductController.class).getAllProducts()).withRel("Product List"));
+            return ResponseEntity.status(HttpStatus.OK).body(productO.get());
     }
 
-    @Operation(summary = "Atualiza um produto no banco pelo ID")
+    @Operation(summary = "Updates a product in the database referenced by ID and returns it already updated")
     @PutMapping("/{id}")
     public ResponseEntity<Object> updateProduct(@PathVariable(value = "id") UUID id,
                                                 @RequestBody @Valid ProductRecordDto productRecordDto) {
@@ -84,7 +82,7 @@ public class ProductController {
         return ResponseEntity.status(HttpStatus.OK).body(productRepository.save(productModel));
     }
 
-    @Operation(summary = "Deleta um produto no banco pelo ID")
+    @Operation(summary = "Deletes a product referenced by ID and returns whether it was deleted or if the product was not found")
     @DeleteMapping("/{id}")
     public ResponseEntity<Object> deleteProduct(@PathVariable(value = "id") UUID id){
         Optional<ProductModel> productO = productRepository.findById(id);
@@ -95,8 +93,8 @@ public class ProductController {
         return ResponseEntity.status(HttpStatus.OK).body("Product has been deleted");
     }
 
-    @Operation(summary = "Deleta todos os produtos do banco")
-    @DeleteMapping()
+    @Operation(summary = "Clean the database (Used for educational purposes only)")
+    @DeleteMapping({"","/"})
     public ResponseEntity<Object> deleteAllProducts(){
         List<ProductModel> productsList = productRepository.findAll();
         if (productsList.isEmpty()){
