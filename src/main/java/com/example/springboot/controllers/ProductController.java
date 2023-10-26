@@ -1,6 +1,7 @@
 package com.example.springboot.controllers;
 
 import com.example.springboot.dtos.ProductRecordDto;
+import com.example.springboot.models.ImageModel;
 import com.example.springboot.models.ProductModel;
 import com.example.springboot.repositories.ProductRepository;
 import io.swagger.v3.oas.annotations.Operation;
@@ -9,19 +10,20 @@ import jakarta.validation.Valid;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 
-import java.util.List;
-import java.util.Optional;
-import java.util.UUID;
+import java.io.IOException;
+import java.util.*;
 
 import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.linkTo;
 import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.methodOn;
 
 @RestController
 @Tag(name =  "Products")
-@RequestMapping(value = "/products")
+@RequestMapping(value = "/api/products")
 @CrossOrigin(origins = "http://127.0.0.1:5500")
 //Rest Controller é uma derivada da @Controller, mas direcionada a uma api Restful
 public class ProductController {
@@ -39,7 +41,6 @@ public class ProductController {
         var productModel = new ProductModel();
         BeanUtils.copyProperties(productRecordDto, productModel);
         return ResponseEntity.status(HttpStatus.CREATED).body(productRepository.save(productModel));
-        //Metodo Post pronto porem sem customização de mensagem de erro ou de exceptions
     }
 
     @Operation(summary = "Calls all products in the bank and returns the list of products with their respective individual URLs")
