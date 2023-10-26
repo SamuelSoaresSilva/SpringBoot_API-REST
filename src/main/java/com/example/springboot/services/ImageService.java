@@ -40,7 +40,7 @@ public class ImageService {
 
         if (imageModel != null) {
             return "File uploaded successfully: " + file.getOriginalFilename()
-                    + "\n http://localhost:8080/api/products/image/" + file.getOriginalFilename();
+                    + "\nhttp://localhost:8080/api/products/image/" + file.getOriginalFilename();
         }
         return null;
     }
