@@ -27,7 +27,7 @@ public class ImageController {
     @PostMapping({"/",""})
     public ResponseEntity<?> uploadImage(@RequestParam("image") MultipartFile file) throws IOException {
         String uploadImage = imageService.uploadImage(file);
-        return ResponseEntity.status(HttpStatus.OK)
+        return ResponseEntity.status(HttpStatus.CREATED)
                 .body(uploadImage);
     }
 
@@ -47,11 +47,10 @@ public class ImageController {
                 .body(imageData);
     }
     @DeleteMapping("/")
-    public ResponseEntity clearImageRepository(){
-
-        List<ImageModel> ImageList = imageRepository.findAll();
-        if (ImageList.isEmpty()){
-            return ResponseEntity.status(HttpStatus.NOT_MODIFIED).body("Product list is already empty");
+    public ResponseEntity<String> clearImageRepository(){
+        List<ImageModel> imageList = imageRepository.findAll();
+        if (imageList.isEmpty()){
+            return ResponseEntity.status(HttpStatus.NOT_IMPLEMENTED).body("Product list is already empty");
         }
         imageRepository.deleteAll();
         return ResponseEntity.status(HttpStatus.OK).body("All images has been deleted");
