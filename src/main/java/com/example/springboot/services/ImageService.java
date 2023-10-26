@@ -20,32 +20,36 @@ public class ImageService {
     @Value("${images.upload.path}")
     private String FOLDER_PATH;
 
-    public ImageService() {
-    }
-
     public String uploadImage(MultipartFile file) throws IOException {
 
-
-            ImageModel imageModel = imageRepository.save(ImageModel.builder()
-                    .name(file.getOriginalFilename())
-                    .type(file.getContentType())
-                    .imgByte(ImageUtils.compressImage(file.getBytes())).build());
-
-            if (imageModel != null) {
-                return "file uploaded successfully : " + file.getOriginalFilename()
-                        + "\n http://localhost:8080/api/products/image/" + file.getOriginalFilename();
-            }
-            return null;
+        if (file.isEmpty()) {
+            return "You need to select a file to upload";
+        }
+        if (file.getOriginalFilename().contains(" ")) {
+            return "File name cannot have spaces";
+        }
+        if (imageRepository.existsByName(file.getOriginalFilename())) {
+            return "A file with this name already exists";
         }
 
+        ImageModel imageModel = imageRepository.save(ImageModel.builder()
+                .name(file.getOriginalFilename())
+                .type(file.getContentType())
+                .imgByte(ImageUtils.compressImage(file.getBytes()))
+                .build());
 
-        public byte[] downloadImage (String fileName){
+        if (imageModel != null) {
+            return "File uploaded successfully: " + file.getOriginalFilename()
+                    + "\n http://localhost:8080/api/products/image/" + file.getOriginalFilename();
+        }
+        return null;
+    }
+
+
+    public byte[] downloadImage (String fileName){
+
             Optional<ImageModel> dbImageData = imageRepository.findByName(fileName);
             byte[] images = ImageUtils.decompressImage(dbImageData.get().getImgByte());
             return images;
-        }
-
-        public boolean doesImageExist (String imageName){
-            return imageRepository.existsByName(imageName);
         }
 }
