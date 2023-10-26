@@ -47,7 +47,6 @@ public class ImageService {
 
 
     public byte[] downloadImage (String fileName){
-
             Optional<ImageModel> dbImageData = imageRepository.findByName(fileName);
             byte[] images = ImageUtils.decompressImage(dbImageData.get().getImgByte());
             return images;

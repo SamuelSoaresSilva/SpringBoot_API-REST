@@ -99,7 +99,7 @@ public class ProductController {
     public ResponseEntity<Object> deleteAllProducts(){
         List<ProductModel> productsList = productRepository.findAll();
         if (productsList.isEmpty()){
-            return ResponseEntity.status(HttpStatus.NOT_IMPLEMENTED).body("Product list is already empty");
+            return ResponseEntity.status(HttpStatus.NOT_MODIFIED).body("Product list is already empty");
         }else {
             productRepository.deleteAll();
             return ResponseEntity.status(HttpStatus.OK).body("All products has been deleted");
