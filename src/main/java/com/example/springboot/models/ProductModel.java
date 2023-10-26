@@ -6,6 +6,7 @@ import org.springframework.hateoas.RepresentationModel;
 
 import java.io.Serializable;
 import java.math.BigDecimal;
+import java.util.Set;
 import java.util.UUID;
 @Data
 @Entity
@@ -20,12 +21,21 @@ public class ProductModel extends RepresentationModel<ProductModel> implements S
     private UUID idProduct;
     //Em uma aplicação mais especifica, o certo seria declarar uma entidade separada indicando o endereço
     //de cada uma das imagens de um deivido produto
-    private String image;
     private String name;
     private BigDecimal value;
     private String description;
     private String brand;
     private Integer quantity;
     private String category;
+
+    @ManyToMany(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
+    @JoinTable(name = "product_images",
+        joinColumns = {
+            @JoinColumn(name = "id_Product")
+        },inverseJoinColumns = {
+            @JoinColumn(name = "id_Image")
+    }
+    )
+    private Set<ImageModel> productImages;
 
 }
