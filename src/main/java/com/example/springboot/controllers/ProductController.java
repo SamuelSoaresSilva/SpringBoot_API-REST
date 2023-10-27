@@ -91,7 +91,7 @@ public class ProductController {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Product not found");
         }
         productRepository.delete(productO.get());
-        return ResponseEntity.status(HttpStatus.OK).body("Product has been deleted");
+        return ResponseEntity.status(HttpStatus.OK).body("Product have been deleted");
     }
 
     @Operation(summary = "Clean the database (Used for educational purposes only)")
@@ -102,7 +102,7 @@ public class ProductController {
             return ResponseEntity.status(HttpStatus.NOT_IMPLEMENTED).body("Product list is already empty");
         }else {
             productRepository.deleteAll();
-            return ResponseEntity.status(HttpStatus.OK).body("All products has been deleted");
+            return ResponseEntity.status(HttpStatus.OK).body("All products have been deleted");
         }
     }
 }
