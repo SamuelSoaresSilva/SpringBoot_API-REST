@@ -34,6 +34,7 @@ public class ImageService {
     private InternalImageRepository internalImageRepository;
 
    // @Value("${images.upload.path}")
+   //Path pc samuel "C:\\Users\\samip\\ProjetosSpringBoot\\SpringBoot_API-REST\\src\\main\\resources\\static\\Images\\";
     private final String FOLDER_PATH = "C:\\Users\\samip\\ProjetosSpringBoot\\SpringBoot_API-REST\\src\\main\\resources\\static\\Images\\";
 
     public String getFOLDER_PATH() {
