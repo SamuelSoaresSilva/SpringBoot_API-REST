@@ -28,14 +28,6 @@ public class ProductModel extends RepresentationModel<ProductModel> implements S
     private Integer quantity;
     private String category;
 
-    @ManyToMany(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
-    @JoinTable(name = "product_images",
-        joinColumns = {
-            @JoinColumn(name = "id_Product")
-        },inverseJoinColumns = {
-            @JoinColumn(name = "id_Image")
-    }
-    )
-    private Set<ImageModel> productImages;
+    private HashSet<String> productImages;
 
 }
