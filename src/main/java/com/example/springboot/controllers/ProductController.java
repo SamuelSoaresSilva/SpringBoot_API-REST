@@ -24,7 +24,7 @@ import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.methodOn;
 @RestController
 @Tag(name =  "Products")
 @RequestMapping(value = "/api/products")
-@CrossOrigin(origins = "http://127.0.0.1:5500")
+@CrossOrigin(origins = {"http://127.0.0.1:5500","http://localhost:3000"})
 //Rest Controller é uma derivada da @Controller, mas direcionada a uma api Restful
 public class ProductController {
 
@@ -37,8 +37,11 @@ public class ProductController {
 
     @Operation(summary = "Posts a product to the database and then returns it")
     @PostMapping({"","/"})
-    public ResponseEntity<ProductModel> saveProduct(@RequestBody @Valid ProductRecordDto productRecordDto){
+    public ResponseEntity saveProduct(@RequestBody @Valid ProductRecordDto productRecordDto){
         var productModel = new ProductModel();
+        if (productRepository.existsByName(productRecordDto.name())){
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("A product with this name already exists");
+        }
         BeanUtils.copyProperties(productRecordDto, productModel);
         return ResponseEntity.status(HttpStatus.CREATED).body(productRepository.save(productModel));
     }
