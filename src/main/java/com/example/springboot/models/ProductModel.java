@@ -27,6 +27,7 @@ public class ProductModel extends RepresentationModel<ProductModel> implements S
     private String brand;
     private Integer quantity;
     private String category;
+    private String thumbnail;
 
     private HashSet<String> productImages;
 

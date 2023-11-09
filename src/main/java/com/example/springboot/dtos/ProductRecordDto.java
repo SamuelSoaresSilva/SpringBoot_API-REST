@@ -10,5 +10,6 @@ public record ProductRecordDto(
         @NotBlank String name, @NotNull BigDecimal value,
         @NotBlank String description, @NotBlank String brand,
         @NotNull Integer quantity, @NotBlank String category,
+        @NotBlank @URL String thumbnail,
         @NotNull HashSet<@NotBlank @URL String> productImages) {
 }
