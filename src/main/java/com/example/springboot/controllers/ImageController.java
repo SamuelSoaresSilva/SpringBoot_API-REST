@@ -87,8 +87,9 @@ public class ImageController {
     }
 
     @DeleteMapping({"/internalImage/","/internalImage"})
-    public ResponseEntity clearAllImages() {
+    public String clearAllImages() {
         List<InternalImageModel> images = internalImageRepository.findAll();
+
         if (!images.isEmpty()) {
             for (InternalImageModel image : images) {
                 String filePath = imageService.getFOLDER_PATH() + image.getName();
@@ -96,12 +97,13 @@ public class ImageController {
                 if (file.exists() && file.delete()) {
                     internalImageRepository.delete(image);
                 } else {
-                    return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Failed to delete files or files do not exist");
+                    internalImageRepository.deleteAll();
+                    return "Failed to delete files or files do not exist.";
                 }
             }
-            return ResponseEntity.status(HttpStatus.OK).body("All images have been deleted");
+            return "All images have been deleted.";
         } else {
-            return ResponseEntity.status(HttpStatus.NOT_IMPLEMENTED).body("Repository is already empty");
+            return "No images found in the repository.";
         }
     }
 

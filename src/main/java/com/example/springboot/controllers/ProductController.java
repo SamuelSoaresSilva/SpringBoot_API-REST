@@ -48,16 +48,24 @@ public class ProductController {
 
     @Operation(summary = "Calls all products in the bank and returns the list of products with their respective individual URLs")
     @GetMapping({"","/"})
-    public ResponseEntity getAllProducts(){
+    public ResponseEntity getAllProductsByCategory(){
         List<ProductModel> productsList = productRepository.findAll();
-        if (!productsList.isEmpty()){
-            //JAVA Streams map function
+
+        if (!productsList.isEmpty()) {
+
+            Map<String, List<ProductModel>> productsByCategory = new HashMap<>();
             productsList.forEach(product -> {
+                String category = product.getCategory();
+                if (!productsByCategory.containsKey(category)) {
+                    productsByCategory.put(category, new ArrayList<>());
+                }
+                productsByCategory.get(category).add(product);
                 UUID id = product.getIdProduct();
                 product.add(linkTo(methodOn(ProductController.class).getOneProduct(id)).withSelfRel());
             });
-            return ResponseEntity.status(HttpStatus.OK).body(productsList);
-        }else {
+
+            return ResponseEntity.status(HttpStatus.OK).body(productsByCategory);
+        } else {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body("There is no products yet");
         }
     }
@@ -69,7 +77,7 @@ public class ProductController {
             if (productO.isEmpty()) {
                 return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Product not found");
             }
-            productO.get().add(linkTo(methodOn(ProductController.class).getAllProducts()).withRel("Product List"));
+            productO.get().add(linkTo(methodOn(ProductController.class).getAllProductsByCategory()).withRel("Product List"));
             return ResponseEntity.status(HttpStatus.OK).body(productO.get());
     }
 
