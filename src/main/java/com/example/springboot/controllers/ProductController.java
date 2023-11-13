@@ -24,7 +24,7 @@ import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.methodOn;
 @RestController
 @Tag(name =  "Products")
 @RequestMapping(value = "/api/products")
-@CrossOrigin(origins = "http://127.0.0.1:5500")
+@CrossOrigin(origins = {"http://127.0.0.1:5500","http://localhost:3000"})
 //Rest Controller é uma derivada da @Controller, mas direcionada a uma api Restful
 public class ProductController {
 
@@ -37,24 +37,35 @@ public class ProductController {
 
     @Operation(summary = "Posts a product to the database and then returns it")
     @PostMapping({"","/"})
-    public ResponseEntity<ProductModel> saveProduct(@RequestBody @Valid ProductRecordDto productRecordDto){
+    public ResponseEntity saveProduct(@RequestBody @Valid ProductRecordDto productRecordDto){
         var productModel = new ProductModel();
+        if (productRepository.existsByName(productRecordDto.name())){
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("A product with this name already exists");
+        }
         BeanUtils.copyProperties(productRecordDto, productModel);
         return ResponseEntity.status(HttpStatus.CREATED).body(productRepository.save(productModel));
     }
 
     @Operation(summary = "Calls all products in the bank and returns the list of products with their respective individual URLs")
     @GetMapping({"","/"})
-    public ResponseEntity getAllProducts(){
+    public ResponseEntity getAllProductsByCategory(){
         List<ProductModel> productsList = productRepository.findAll();
-        if (!productsList.isEmpty()){
-            //JAVA Streams map function
+
+        if (!productsList.isEmpty()) {
+
+            Map<String, List<ProductModel>> productsByCategory = new HashMap<>();
             productsList.forEach(product -> {
+                String category = product.getCategory();
+                if (!productsByCategory.containsKey(category)) {
+                    productsByCategory.put(category, new ArrayList<>());
+                }
+                productsByCategory.get(category).add(product);
                 UUID id = product.getIdProduct();
                 product.add(linkTo(methodOn(ProductController.class).getOneProduct(id)).withSelfRel());
             });
-            return ResponseEntity.status(HttpStatus.OK).body(productsList);
-        }else {
+
+            return ResponseEntity.status(HttpStatus.OK).body(productsByCategory);
+        } else {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body("There is no products yet");
         }
     }
@@ -66,7 +77,7 @@ public class ProductController {
             if (productO.isEmpty()) {
                 return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Product not found");
             }
-            productO.get().add(linkTo(methodOn(ProductController.class).getAllProducts()).withRel("Product List"));
+            productO.get().add(linkTo(methodOn(ProductController.class).getAllProductsByCategory()).withRel("Product List"));
             return ResponseEntity.status(HttpStatus.OK).body(productO.get());
     }
 
@@ -91,7 +102,7 @@ public class ProductController {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Product not found");
         }
         productRepository.delete(productO.get());
-        return ResponseEntity.status(HttpStatus.OK).body("Product has been deleted");
+        return ResponseEntity.status(HttpStatus.OK).body("Product have been deleted");
     }
 
     @Operation(summary = "Clean the database (Used for educational purposes only)")
@@ -102,7 +113,7 @@ public class ProductController {
             return ResponseEntity.status(HttpStatus.NOT_IMPLEMENTED).body("Product list is already empty");
         }else {
             productRepository.deleteAll();
-            return ResponseEntity.status(HttpStatus.OK).body("All products has been deleted");
+            return ResponseEntity.status(HttpStatus.OK).body("All products have been deleted");
         }
     }
 }

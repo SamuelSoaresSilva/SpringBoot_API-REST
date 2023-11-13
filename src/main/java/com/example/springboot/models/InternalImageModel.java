@@ -4,27 +4,25 @@ import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
-
+import lombok.NoArgsConstructor;
 
 import java.util.UUID;
 
-@Data
 @Entity
+@Data
+@Table(name = "TB_INTERNAL_IMAGE")
 @Builder
 @AllArgsConstructor
-@Table(name = "TB_IMAGES")
-public class ImageModel {
+@NoArgsConstructor
+public class InternalImageModel {
 
     @Id
     @GeneratedValue(strategy = GenerationType.UUID)
-    private UUID idImage;
+    private UUID idInternalImage;
+
     private String name;
     private String type;
 
-    @Column(length = 5000000)
-    private byte[] imgByte;
+    private String filePath;
 
-    public ImageModel(){
-
-    }
 }
