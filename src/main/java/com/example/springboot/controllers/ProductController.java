@@ -40,7 +40,10 @@ public class ProductController {
         if (productRepository.existsByName(productRecordDto.name())){
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("A product with this name already exists");
         }
+        var imgArray = productRecordDto.productImages().toArray();
         BeanUtils.copyProperties(productRecordDto, productModel);
+        productModel.setThumbnail(imgArray[0].toString());
+
         return ResponseEntity.status(HttpStatus.CREATED).body(productRepository.save(productModel));
     }
 
