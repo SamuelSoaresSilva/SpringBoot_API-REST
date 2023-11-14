@@ -1,7 +1,7 @@
 package com.example.springboot.controllers;
 
 import com.example.springboot.dtos.ProductRecordDto;
-import com.example.springboot.models.ImageModel;
+
 import com.example.springboot.models.ProductModel;
 import com.example.springboot.repositories.ProductRepository;
 import io.swagger.v3.oas.annotations.Operation;
@@ -10,12 +10,10 @@ import jakarta.validation.Valid;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
-import org.springframework.http.MediaType;
+
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-import org.springframework.web.multipart.MultipartFile;
 
-import java.io.IOException;
 import java.util.*;
 
 import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.linkTo;
@@ -24,8 +22,8 @@ import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.methodOn;
 @RestController
 @Tag(name =  "Products")
 @RequestMapping(value = "/api/products")
-@CrossOrigin(origins = {"http://127.0.0.1:5500","http://localhost:3000"})
-//Rest Controller é uma derivada da @Controller, mas direcionada a uma api Restful
+@CrossOrigin(origins = {"http://127.0.0.1:5500","http://localhost:3000","http://localhost:5173"})
+
 public class ProductController {
 
     /*
@@ -37,7 +35,7 @@ public class ProductController {
 
     @Operation(summary = "Posts a product to the database and then returns it")
     @PostMapping({"","/"})
-    public ResponseEntity saveProduct(@RequestBody @Valid ProductRecordDto productRecordDto){
+    public ResponseEntity<?> saveProduct(@RequestBody @Valid ProductRecordDto productRecordDto){
         var productModel = new ProductModel();
         if (productRepository.existsByName(productRecordDto.name())){
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("A product with this name already exists");
@@ -48,7 +46,7 @@ public class ProductController {
 
     @Operation(summary = "Calls all products in the bank and returns the list of products with their respective individual URLs")
     @GetMapping({"","/"})
-    public ResponseEntity getAllProductsByCategory(){
+    public ResponseEntity<?> getAllProductsByCategory(){
         List<ProductModel> productsList = productRepository.findAll();
 
         if (!productsList.isEmpty()) {

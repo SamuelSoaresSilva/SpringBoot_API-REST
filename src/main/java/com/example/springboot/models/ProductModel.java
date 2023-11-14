@@ -31,4 +31,5 @@ public class ProductModel extends RepresentationModel<ProductModel> implements S
 
     private HashSet<String> productImages;
 
+
 }
