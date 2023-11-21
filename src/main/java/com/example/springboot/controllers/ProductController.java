@@ -47,7 +47,7 @@ public class ProductController {
         return ResponseEntity.status(HttpStatus.CREATED).body(productRepository.save(productModel));
     }
 
-    @Operation(summary = "Calls all products in the bank and returns the list of products with their respective individual URLs")
+    @Operation(summary = "Calls all products in the bank and returns the list of products separated by a category list")
     @GetMapping({"","/"})
     public ResponseEntity<?> getAllProductsByCategory(){
         List<ProductModel> productsList = productRepository.findAll();
