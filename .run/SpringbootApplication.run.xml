@@ -1,7 +1,7 @@
 <component name="ProjectRunConfigurationManager">
   <configuration default="false" name="SpringbootApplication" type="Application" factoryName="Application" nameIsGenerated="true">
     <option name="MAIN_CLASS_NAME" value="com.example.springboot.SpringbootApplication" />
-    <module name="SpringBoot_API-REST" />
+    <module name="springboot_api_REST" />
     <extension name="coverage">
       <pattern>
         <option name="PATTERN" value="com.example.springboot.*" />
